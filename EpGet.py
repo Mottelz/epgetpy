@@ -1,5 +1,4 @@
-import requests
-import json
+import requests, json, os
 
 def getToken():
     headers = {'Content-Type': 'application/json', 'Accept': 'application/json', }
@@ -25,7 +24,18 @@ def dataToFilenames(data, extension):
     return toReturn
 
 
+def renameFiles(newNames, filepath, extension):
+    count = 0
+    for file in sorted(os.listdir(filepath)):
+        if file.endswith(extension):
+            print('Renaming: '+file+' to '+newNames[count])
+            os.rename(src=filepath+file, dst=filepath+newNames[count])
+            count = count+1
+
+
+ext = '.mkv'
+filepath = '/Users/mottelzirkind/Movies/Bosch/'
 token = getToken()
 data = getSeasonData(token, '277928', '4')
-ext = '.mkv'
-print(dataToFilenames(data, ext))
+episodes = dataToFilenames(data, ext)
+renameFiles(episodes, filepath, ext)
