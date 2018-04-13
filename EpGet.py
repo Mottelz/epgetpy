@@ -15,5 +15,17 @@ def getSeasonData(token, showid, season):
     return json.loads(response.content)['data']
 
 
+def dataToFilenames(data, extension):
+    toReturn = []
+    for x in data:
+        if x['airedEpisodeNumber'] < 10:
+            toReturn.append(str(x['airedSeason']) +'0'+ str(x['airedEpisodeNumber'])+' '+x['episodeName']+extension)
+        else:
+            toReturn.append(str(x['airedSeason']) + str(x['airedEpisodeNumber'])+' '+x['episodeName']+extension)
+    return toReturn
+
+
 token = getToken()
-print(getSeasonData(token, '277928', '4'))
+data = getSeasonData(token, '277928', '4')
+ext = '.mkv'
+print(dataToFilenames(data, ext))
