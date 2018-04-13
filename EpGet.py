@@ -2,10 +2,23 @@ import requests, json, os
 
 def getToken():
     headers = {'Content-Type': 'application/json', 'Accept': 'application/json', }
-    data = '{  "apikey": "B4AAF3CDC8191A8A",  "userkey": "9E37DA78322F6E6A",  "username": "mottelz"}'
+    data = '{  "apikey": "B4AAF3CDC8191A8A",  "userkey": "9E37DA78322F6E6A",  "username": "mottelz" }'
     response = requests.post('https://api.thetvdb.com/login', headers=headers, data=data)
     token = json.loads(response.content)['token']
     return token
+
+
+def getShowID(token, showName):
+    headers = {'Accept': 'application/json','Authorization': 'Bearer '+token}
+    params = (('name', showName),)
+    response = requests.get('https://api.thetvdb.com/search/series', headers=headers, params=params)
+    fulllist = json.loads(response.content)['data']
+    count=0
+    for x in fulllist:
+        print(str(count)+': '+x['firstAired']+' '+str(x['id'])+' '+x['seriesName'])
+        count+=1
+    choice = int(input('Choose one: '))
+    return str(fulllist[choice]['id'])
 
 
 def getSeasonData(token, showid, season):
@@ -33,9 +46,10 @@ def renameFiles(newNames, filepath, extension):
             count = count+1
 
 
-ext = '.mkv'
-filepath = '/Users/mottelzirkind/Movies/Bosch/'
+ext = input('Input file extension: ')
+filepath = input('Input filepath: ')
 token = getToken()
-data = getSeasonData(token, '277928', '4')
+seriesID = getShowID(token, input('Enter show name: '))
+data = getSeasonData(token, seriesID, input('Enter season: '))
 episodes = dataToFilenames(data, ext)
 renameFiles(episodes, filepath, ext)
