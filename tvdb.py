@@ -1,5 +1,7 @@
 import requests, json, os
 
+
+# Grabs the token
 def getToken():
     headers = {'Content-Type': 'application/json', 'Accept': 'application/json', }
     data = '{  "apikey": "B4AAF3CDC8191A8A",  "userkey": "9E37DA78322F6E6A",  "username": "mottelz" }'
@@ -8,6 +10,7 @@ def getToken():
     return token
 
 
+# Uses query to get the show ID
 def getShowID(token, showName):
     headers = {'Accept': 'application/json','Authorization': 'Bearer '+token}
     params = (('name', showName),)
@@ -21,12 +24,14 @@ def getShowID(token, showName):
     return str(fulllist[choice]['id'])
 
 
+# Uses the show ID to get the raw season data
 def getSeasonData(token, showid, season):
     headers = {'Accept': 'application/json','Authorization': 'Bearer '+token,}
     response = requests.get('https://api.thetvdb.com/series/'+showid+'/episodes/query?airedSeason='+season, headers=headers)
     return json.loads(response.content)['data']
 
 
+# Converts the raw data to file names
 def dataToFilenames(data):
     toReturn = []
     for x in data:
@@ -39,6 +44,7 @@ def dataToFilenames(data):
     return toReturn
 
 
+# Renames the files
 def renameFiles(newNames, filepath, extension):
     count = 0
     for file in sorted(os.listdir(filepath)):
