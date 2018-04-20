@@ -35,7 +35,7 @@ def getSeasonData(token, showid, season):
 def dataToFilenames(data):
     toReturn = []
     for x in data:
-        if x['episodeName'] is None:
+        if x['episodeName'] is None:  # Here because sometimes later episodes do not have
             break
         if x['airedEpisodeNumber'] < 10:
             toReturn.append(str(x['airedSeason']) +'0'+ str(x['airedEpisodeNumber'])+' '+x['episodeName'])
