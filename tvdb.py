@@ -4,7 +4,7 @@ import requests, json, os
 # Grabs the token
 def getToken():
     headers = {'Content-Type': 'application/json', 'Accept': 'application/json', }
-    data = '{  "apikey": "B4AAF3CDC8191A8A",  "userkey": "9E37DA78322F6E6A",  "username": "mottelz" }'
+    data = '{  "apikey": "8OLZK9HOF5D65PX4",  "userkey": "9E37DA78322F6E6A",  "username": "mottelz" }'
     response = requests.post('https://api.thetvdb.com/login', headers=headers, data=data)
     token = json.loads(response.content)['token']
     return token
@@ -35,17 +35,19 @@ def getSeasonData(token, showid, season):
 def dataToFilenames(data):
     toReturn = []
     for x in data:
-        if x['episodeName'] is None:  # Here because sometimes later episodes do not have
-            break
+        if x['episodeName'] is None:  # Here because sometimes later episodes do not have or there is a blank episode
+            continue
         if x['airedEpisodeNumber'] < 10:
             toReturn.append(str(x['airedSeason']) +'0'+ str(x['airedEpisodeNumber'])+' '+x['episodeName'])
         else:
             toReturn.append(str(x['airedSeason']) + str(x['airedEpisodeNumber'])+' '+x['episodeName'])
-    return toReturn
+    return sorted(toReturn)
 
 
 # Renames the files
 def renameFiles(newNames, filepath, extension):
+    for file in os.listdir(filepath):
+        os.rename(src=filepath + file, dst=filepath + file.lower())
     count = 0
     for file in sorted(os.listdir(filepath)):
         if file.endswith(extension):

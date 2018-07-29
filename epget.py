@@ -3,7 +3,11 @@ import tvdb
 end = False
 token = tvdb.getToken()  # Get the token.
 while not end:
-    seriesID = tvdb.getShowID(token, input('Enter show name: '))  # Get the show ID.
+    try:
+        seriesID = tvdb.getShowID(token, input('Enter show name: '))  # Get the show ID.
+    except:
+        print("Can't find show.")
+        continue
     data = tvdb.getSeasonData(token, seriesID, input('Enter season: '))  # Grab the list of episodes (raw data).
     episodes = tvdb.dataToFilenames(data)  # Convert the raw data to preferred style.
     if "y" in input('Do you want to rename files? "y" for yes. '):  # Decide to rename or print to screen.
