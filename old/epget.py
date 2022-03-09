@@ -1,5 +1,6 @@
 #!/Library/Frameworks/Python.framework/Versions/3.6/bin/python3
 import tvdb
+
 end = False
 token = tvdb.getToken()  # Get the token.
 while not end:

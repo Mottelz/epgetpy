@@ -1,4 +1,6 @@
-import requests, json, os
+import json
+import os
+import requests
 
 
 # Grabs the token
