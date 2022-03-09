@@ -3,12 +3,27 @@ import requests
 
 def search_for_show(query):
     res = requests.get('https://api.tvmaze.com/search/shows', params={'q': query})
-    return res.json()
+    return search_results_to_strings(res.json())
+
+
+def search_results_to_strings(search_results):
+    out = []
+    for search_result in search_results:
+        out.append(f"{search_result['show']['id']} {search_result['show']['name']} ({search_result['show']['premiered'][:4]})")
+    return out
 
 
 def get_episode_list(show_id):
     res = requests.get(f'https://api.tvmaze.com/shows/{show_id}/episodes')
     return res.json()
+
+
+def trim_to_season(full_list, season):
+    out = []
+    for episode in full_list:
+        if str(episode['season']) == season:
+            out.append(episode)
+    return out
 
 
 def trim_episode_list(full_list, start_season, start_episode, end_season, end_episode):
@@ -34,10 +49,3 @@ def episode_dict_to_list(episode_json):
         else:
             out.append(f'{episode["season"]}0{episode["number"]} {episode["name"]}')
     return out
-
-
-if __name__ == '__main__':
-    ep_list = get_episode_list('99')
-    trimmed = trim_episode_list(ep_list, 2, 3, 2, 10)
-    for ep in episode_dict_to_list(trimmed):
-        print(ep)
