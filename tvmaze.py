@@ -9,7 +9,10 @@ def search_for_show(query):
 def search_results_to_strings(search_results):
     out = []
     for search_result in search_results:
-        out.append(f"{search_result['show']['id']} {search_result['show']['name']} ({search_result['show']['premiered'][:4]})")
+        sid = search_result['show']['id'] if search_result['show']['id'] else 'N/A'
+        name = search_result['show']['name'] if search_result['show']['name'] else 'N/A'
+        year = search_result['show']['premiered'][:4] if search_result['show']['premiered'] else 'N/A'
+        out.append(f"{sid} {name} ({year})")
     return out
 
 
