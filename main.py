@@ -8,7 +8,7 @@ def print_list(list_to_print):
 
 
 def main():
-    while 'y' not in input("Do you want to quit? ").lower():
+    while True:
         # Get episode list
         for result in tvmaze.search_for_show(input("Enter show name: ")):
             print(result)
@@ -36,6 +36,10 @@ def main():
             namer.rename_files(directory, episode_list, ext, False)
             if 'y' in input("Are you sure you want to do this? ").lower():
                 namer.rename_files(directory, episode_list, ext)
+
+        # offer an escape
+        if 'y' in input("Do you want to quit? ").lower():
+            exit()
 
 
 if __name__ == '__main__':
