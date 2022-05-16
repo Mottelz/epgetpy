@@ -17,7 +17,16 @@ def list_files_with_extension(directory, extension):
     return [file for file in os.listdir() if file.endswith(extension)]
 
 
+def remove_part_of_filename(directory, extension, string_to_remove):
+    old_names = list_files_with_extension(directory, extension)
+    new_names = []
+    for name in old_names:
+        new_names.append(name.replace(string_to_remove, ''))
+    print("Suggested rename")
+    rename_files(directory, new_names, extension, False)
+    if 'y' in input("Rename? ").lower():
+        rename_files(directory, new_names, extension, True)
+
+
 if __name__ == '__main__':
-    test_data = list_files_with_extension(r"D:/Users/Mottel/Downloads/Torrents/Euphoria", 'mp4')
-    for f in test_data:
-        print(f)
+    remove_part_of_filename(input("enter directory: "), input("enter extension: "), input("enter string to remove: "))
