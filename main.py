@@ -26,14 +26,14 @@ def main():
                                                         int(input("End episode: ")))
 
         # Print current list
-        episode_list = tvmaze.episode_dict_to_list(episode_list)
+        episode_list = tvmaze.process_episode_dict(episode_list)
         print_list(episode_list)
 
         # Rename?
         if 'y' in input("Do you want to rename files? ").lower():
             directory = input("Enter folder: ")
             ext = input("Enter extension: ")
-            namer.rename_files(directory, episode_list, ext, False)
+            print(namer.rename_files(directory, episode_list, ext, False))
             if 'y' in input("Are you sure you want to do this? ").lower():
                 namer.rename_files(directory, episode_list, ext)
 

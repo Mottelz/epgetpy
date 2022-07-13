@@ -1,18 +1,21 @@
 import requests
 
 
-def search_for_show(query):
+def search_for_show(query, return_as_lists=False):
     res = requests.get('https://api.tvmaze.com/search/shows', params={'q': query})
-    return search_results_to_strings(res.json())
+    return process_search_results(res.json(), return_as_lists)
 
 
-def search_results_to_strings(search_results):
+def process_search_results(search_results, return_as_lists):
     out = []
     for search_result in search_results:
         sid = search_result['show']['id'] if search_result['show']['id'] else 'N/A'
         name = search_result['show']['name'] if search_result['show']['name'] else 'N/A'
         year = search_result['show']['premiered'][:4] if search_result['show']['premiered'] else 'N/A'
-        out.append(f"{sid} {name} ({year})")
+        if return_as_lists:
+            out.append([sid, name, year])
+        else:
+            out.append(f"{sid} {name} ({year})")
     return out
 
 
@@ -44,11 +47,19 @@ def trim_episode_list(full_list, start_season, start_episode, end_season, end_ep
     return out
 
 
-def episode_dict_to_list(episode_json):
+def process_episode_dict(episode_json, return_as_lists=False):
     out = []
-    for episode in episode_json:
-        if episode["number"] > 9:
-            out.append(f'{episode["season"]}{episode["number"]} {episode["name"]}')
-        else:
-            out.append(f'{episode["season"]}0{episode["number"]} {episode["name"]}')
+    if not return_as_lists:
+        for episode in episode_json:
+            if episode["number"] > 9:
+                out.append(f'{episode["season"]}{episode["number"]} {episode["name"]}')
+            else:
+                out.append(f'{episode["season"]}0{episode["number"]} {episode["name"]}')
+    else:
+        for episode in episode_json:
+            out.append([episode["season"], episode["number"], episode["name"]])
     return out
+
+
+if __name__ == '__main__':
+    print(search_for_show('doctor who', True))

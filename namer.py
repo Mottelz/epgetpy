@@ -5,11 +5,13 @@ import utils
 def rename_files(directory, new_names, extension, rename=True):
     os.chdir(directory)
     old_names = list_files_with_extension(directory, extension)
+    out = []
     for i in range(len(old_names)):
         if rename:
             os.rename(old_names[i], f"{utils.make_safe(new_names[i])}.{extension}")
         else:
-            print(f'{old_names[i]} -> {utils.make_safe(new_names[i])}.{extension}')
+            out.append(f'{old_names[i]} -> {utils.make_safe(new_names[i])}.{extension}')
+    return out
 
 
 def list_files_with_extension(directory, extension):
